@@ -176,7 +176,7 @@ h2 {
 }
 
 .note {
-  color: var(--gris-texte);
+  color: #727773; /* changement de la couleur du texte class=note pour respect RGAA */
 }
 
 /* Étapes */
