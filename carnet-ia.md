@@ -1096,13 +1096,6 @@ Les points à traiter en priorité :
 - **Liens vers des pages absentes** — `index.html`, `bouquets.html` et `contact.html` ne figurent pas dans le dossier actuel. Ces liens seront cassés si tu livres uniquement ce dossier.
 - **Promesse de livraison ambiguë** — Le bandeau annonce une livraison le jour même sans restriction, alors que le tableau indique « Lendemain » pour la zone 3. Préciser les zones concernées dans le bandeau.
 
-Quelques suggestions secondaires :
-
-- Remplacer l’alternative de l’image par « Camionnette de livraison Fleurs Roussel » : formulation plus directe et orthographe corrigée.
-- Si nécessaire, empêcher la sélection d’une date passée : actuellement, le champ l’autorise.
-- Dans `prefers-reduced-motion`, supprimer également le déplacement au survol si tu veux éviter tout mouvement : seule la transition est désactivée aujourd’hui.
-
-Les associations `label`/`input`, la hiérarchie des titres, les en-têtes du tableau avec `scope`, ainsi que les dimensions de l’image sont déjà bien renseignés.
 
 > **Promesse de livraison ambiguë** — Le bandeau annonce une livraison le jour même sans restriction, alors que le tableau indique « Lendemain » pour la zone 3. Préciser les zones concernées dans le bandeau.
 > **Lien d’évitement potentiellement masqué** — Dans `css/style.css:38`, `.evitement` n’a pas de `z-index`, tandis que l’en-tête possède `z-index: 10`. Le lien « Aller au contenu » risque donc d’apparaître derrière l’en-tête au clavier. Prévoir un niveau supérieur et vérifier avec Tab.
@@ -1163,6 +1156,16 @@ Les trois modifications sont appliquées :
 
 Le contrôle `git diff --check` ne signale aucun problème. L’affichage du lien avec Tab reste à vérifier dans le navigateur.
 
+Propositions rejetées : 
 
+Formulaire sans vérification réelle — Dans livraison.html:100, action="#" renvoie vers la page courante. Les champs sont contrôlés par le navigateur, mais aucun traitement ne détermine si la livraison est possible. C’est à compléter si le formulaire doit fonctionner.  
+
+--> c'est un exercice donc pas besoin de modifier ce point là.
+
+Liens vers des pages absentes — index.html, bouquets.html et contact.html ne figurent pas dans le dossier actuel. Ces liens seront cassés si tu livres uniquement ce dossier.
+
+--> c'est un exercice donc pas de lien actif, c'est ok.
+
+**MàJ des règles d'utilisation de l'IA :**
 
 Je n'ai pas mis à jour mes règles d'utilisation d'IA, pour moi elles étaient bonnes.
