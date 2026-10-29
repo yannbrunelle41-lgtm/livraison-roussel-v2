@@ -768,3 +768,401 @@ Rédiger cinq règles personnelles d’usage de l’IA :
 
 **PARTIE E :**
 
+# Analyser la fiche recette
+
+> on attaque un nouveau brief. livraison-roussel-v2. Le but va être d'identifier les problèmes remontés sur une fiche recette. Je te décrirai le problème et on le resoudra ensemble avec les contraintes que je t'ai imposé comme le fait de m'aider à trouver la solution
+
+D’accord, on avance ensemble sur **livraison-roussel-v2**, un problème de la fiche recette à la fois. Je t’aiderai à repérer le code concerné et à comprendre la cause, avec des indices pour que tu trouves toi-même la solution.
+
+Décris-moi le premier problème : quel comportement est attendu et qu’est-ce que tu observes actuellement ?
+
+Hypothèse perso avant IA : Je vais essayer de trouver un conteneur qui a des tailles définies ou qui posent problème en fonction de la taille d'écran.
+
+> dans la version web avec une largeur de 375px d'écran, la page défile horizontalement. Le menu et le fond vert du bandeau sont coupés. Le but est qu'il n'y ait aucun défilement horizontal et que tout le contenu tienne dans la largeur de l'écran
+
+<details><summary>2 previous messages</summary>
+
+> Je vais regarder le HTML et le CSS pour repérer ce qui dépasse à 375 px, puis te guider avec un premier indice.
+>
+> <details><summary>Ran 2 commands</summary>
+>
+> - Ran `pwd; rg --files -g 'AGENTS.md' -g '*.html' -g '*.css'`
+> - Ran `cat css/style.css livraison.html`
+>
+> </details>
+</details>
+
+Une première piste se trouve dans la règle `.conteneur` de ton CSS :
+
+```css
+.conteneur {
+  width: 960px;
+  margin-inline: auto;
+  padding-inline: var(--espace);
+}
+```
+
+Cette classe est utilisée dans le HTML pour le contenu de l’en-tête et du bandeau, entre autres.
+
+**`width: 960px` impose une largeur fixe**, même lorsque l’écran ne mesure que 375 px. Le contenu dépasse donc la largeur disponible, ce qui explique le défilement horizontal.
+
+À ton avis, quelle différence y aurait-il entre imposer une **largeur fixe** de 960 px et définir une **largeur maximale** de 960 px ?
+
+> on pourrait utiliser width: 100%
+
+Oui : `width: 100%` permettrait au conteneur de prendre toute la largeur de son parent, donc de s’adapter aux 375 px disponibles.
+
+Mais sur un grand écran, il occuperait aussi toute la largeur. Quelle propriété permettrait de conserver une limite de **960 px** ?
+
+> max-width: 960px
+
+Oui, exactement ! Les deux propriétés se complètent :
+
+- `width: 100%` adapte le conteneur à la largeur disponible.
+- `max-width: 960px` l’empêche de dépasser 960 px sur grand écran.
+
+Essaie cette combinaison dans `.conteneur`, puis vérifie à 375 px : est-ce que la page défile encore horizontalement ?
+
+> ok je n'ai plus de défilement horizontal et tou le contenu tient sur la largeur
+
+Le problème est donc résolu à 375 px : plus de défilement horizontal et le contenu tient dans l’écran.
+
+La cause était la largeur fixe de 960 px. Tu as rendu le conteneur adaptable tout en conservant cette limite pour les grands écrans.
+
+Quel est le prochain problème de la fiche recette ?
+
+Hypothèse perso avant IA : Je pense qu'une taille définie de l'image pose soucis. Peut-être un Width à 100% réglera le problème.
+
+> à 375px et 1280px de largeur d'écran, l'img "camionette.jpg" parait écrasée ou étirée. LE but est que l'image garde ses proportions quelle que soit la largeur d'écran
+
+<details><summary>2 previous messages</summary>
+
+> Je vais regarder les règles qui définissent la largeur et la hauteur de cette image.
+>
+> <details><summary>Explored a search</summary>
+>
+> - Searched for `^(img|\.bandeau__photo)|camionnette` in `style.css`
+>
+> </details>
+</details>
+
+Ton image reçoit deux règles qui définissent sa hauteur :
+
+```css
+img {
+  max-width: 100%;
+  height: auto;
+}
+```
+
+```css
+.bandeau__photo {
+  width: 100%;
+  height: 220px;
+  border-radius: var(--rayon);
+}
+```
+
+La classe `.bandeau__photo` est **plus spécifique** que le sélecteur `img` : sa hauteur de 220 px prend donc le dessus. La largeur s’adapte à l’écran, mais la hauteur reste fixe, ce qui déforme l’image.
+
+Parmi ces deux valeurs de `height`, laquelle laisserait le navigateur calculer la hauteur pour conserver les proportions ?
+
+> height: auto; je pense qu'il faut supprimer la ligne height: 220px;
+
+Oui, ton raisonnement est juste. En supprimant `height: 220px` de `.bandeau__photo`, la règle `height: auto` définie dans `img` pourra s’appliquer.
+
+Le navigateur calculera alors la hauteur en fonction de la largeur pour conserver les proportions.
+
+Après cette suppression, l’image te paraît-elle correctement proportionnée à **375 px et à 1280 px** ?
+
+> problème résolu
+
+L’image conserve maintenant ses proportions aux deux largeurs. La hauteur fixe de 220 px était bien la cause de la déformation.
+
+Quel est le prochain point de la fiche recette ?
+
+Hypothèse perso avant IA : Pas d'idée.
+
+> lorsque je clique sur la barre d'adresse et ensuite plusieurs fois sur Tab, impossible de savoir quel lien, quel champ ou quel bouton est actif. Le but est qu'un repère bien visible entoure chaque élément atteint au clavier.
+
+<details><summary>2 previous messages</summary>
+
+> Je vais repérer les règles CSS qui contrôlent le repère de navigation au clavier.
+>
+> <details><summary>Explored a search</summary>
+>
+> - Searched for `focus|outline` in `style.css`
+>
+> </details>
+</details>
+
+Cette règle explique le problème :
+
+```css
+*:focus {
+  outline: none;
+}
+```
+
+Le **focus** désigne l’élément qui reçoit les actions du clavier. Ici :
+
+- `*` cible tous les éléments ;
+- `:focus` cible celui qui a le focus ;
+- `outline: none` supprime son contour visible.
+
+Le déplacement avec Tab fonctionne donc, mais son repère est masqué.
+
+À ton avis, que se passerait-il si tu retirais cette règle ?
+
+> J'ai pas envie de la supprimer mais de la remplacer par outline: auto;
+
+Oui, `outline: auto;` laisse le navigateur choisir un contour de focus adapté. Tu conserves ainsi la règle tout en rétablissant un repère visible.
+
+Teste avec Tab : le contour est-il bien visible sur les liens, les champs et le bouton ?
+
+> oui
+
+Ce point est donc résolu : le focus est visible et tu peux repérer l’élément atteint avec Tab.
+
+Quel est le prochain problème de la fiche recette ?
+
+Hypothèse perso avant IA : Pas d'idée.
+
+> le clic sur «Date souhaitée» active le champ de date, le clic sur «Code postal» ne fait
+> rien. Un lecteur d’écran annonce un champ de saisie sans nom. Le but est que les deux étiquettes se comportent de la même manière
+
+<details><summary>2 previous messages</summary>
+
+> Je vais comparer les liens entre les deux étiquettes et leurs champs dans le HTML.
+>
+> <details><summary>Explored a search</summary>
+>
+> - Searched for `label for=` in `livraison.html`
+>
+> </details>
+</details>
+
+Une étiquette est reliée à son champ lorsque son attribut **`for` correspond exactement à l’`id` du champ**. Ce lien permet au clic d’activer le champ et au lecteur d’écran de connaître son nom.
+
+Compare les deux paires présentes :
+
+```html
+<label for="date">Date souhaitée</label>
+<input id="date" name="date" type="date" required>
+```
+
+```html
+<label for="cp">Code postal</label>
+<input id="code-postal" name="cp" type="text" inputmode="numeric"
+       pattern="[0-9]{5}" maxlength="5" autocomplete="postal-code" required>
+```
+
+Quelle différence remarques-tu entre les valeurs de `for` et d’`id` dans ces deux paires ?
+
+> l'id ne correspond pas au for pour le code postal du coup j'aurai envie de remplacer code-postal par cp. input id="cp"
+
+Oui, c’est bien ça : avec `id="cp"`, le champ correspondra au `for="cp"` de l’étiquette. Leur association sera établie.
+
+Après ta modification, clique sur « Code postal » : est-ce que le champ reçoit bien le focus ?
+
+> c'est good
+
+Ce point est résolu : l’étiquette « Code postal » est maintenant reliée à son champ, comme « Date souhaitée ».
+
+Quel est le prochain problème de la fiche recette ?
+
+Hypothèse perso avant IA : Changer la couleur du texte pour une couleur plus foncée qui respecte le RGAA.
+
+> Le texte de la class "note" a une couleur non adapter à un écran en faible lumonisité. Le but  est de respecter les règles d'accéssibilité, au moins 4,5 pour 1 pour ce texte. Je propose de changer gris-texte: #b4b9b5;
+
+Oui, tu as repéré la bonne variable : `.note` utilise `var(--gris-texte)`. Le contraste dépend de cette couleur **et du fond**, ici blanc.
+
+Attention : cette variable sert aussi à d’autres éléments, comme la légende du tableau et les bordures des champs.
+
+Quelle nuance de gris plus foncée voudrais-tu tester ? On pourra vérifier si son contraste avec le blanc atteint **4,5:1**.
+
+> le but est déjà de ne changer que cette couleur de texte du coup j'aurai envie de lui assigner une coleur directement non ?
+
+Oui, définir une couleur directement dans `.note` permettrait de changer uniquement ce texte, sans toucher aux autres éléments qui utilisent `--gris-texte`.
+
+Quelle couleur plus foncée souhaites-tu tester sur le fond blanc ?
+
+> aucune idée, donne moi la couleur grise la plus proche de celle déjà en place mais qui respecte le ratio demandé
+
+<details><summary>2 previous messages</summary>
+
+> Je vais calculer une teinte proche du gris actuel qui atteint le contraste demandé sur fond blanc.
+>
+> <details><summary>Ran a command</summary>
+>
+> - Ran `python3 -c 'def lum(c):
+>  v=[x/255 for x in c]; return sum(w*(x/12.92 if x<=0.04045 else ((x+0.055)/1.055)**2.4) for w,x in zip([0.2126,0.7152,0.0722],v))
+> a=(180,185,181)
+> for d in range(256):
+>  c=tuple(max(0,x-d) for x in a)
+>  r=1.05/(lum(c)+0.05)
+>  if r>=4.5:
+>   print("#%02x%02x%02x"%c, r); break'`
+>
+> </details>
+</details>
+
+Tu peux choisir **`#727773`** : il conserve la légère nuance verte du gris actuel en l’assombrissant. Son contraste avec le fond blanc est d’environ **4,56:1**, ce qui respecte le minimum demandé.
+
+Tu peux l’appliquer uniquement à la propriété `color` de `.note`.
+
+> c'est ok
+
+Ce point est résolu : la note a maintenant un contraste de **4,56:1 sur fond blanc**, supérieur au minimum demandé de 4,5:1.
+
+Quel est le prochain problème de la fiche recette ?
+
+Hypothèse perso avant IA : Allez voir du côté html et vérifier la syntaxe et si rien de ce côté là, vérification du css et des propriétés appliquées au texte du footer.
+
+> tout le footer est en italique et on souhaite que seulement le nom de la boutique soit en italique
+
+<details><summary>2 previous messages</summary>
+
+> Je vais regarder où les balises d’italique commencent et se terminent dans le pied de page.
+>
+> <details><summary>Explored a search</summary>
+>
+> - Searched for `<footer` in `livraison.html`
+>
+> </details>
+</details>
+
+Regarde cette ligne du footer :
+
+```html
+<em>Fleurs Roussel</em>, <em>12 rue Colbert, 37000 Tours ·
+```
+
+La balise `<em>` marque une emphase, généralement affichée en italique. Celle qui entoure le nom est bien fermée avec `</em>`. En revanche, une deuxième s’ouvre avant l’adresse sans être fermée, ce qui peut étendre l’italique au contenu suivant.
+
+Si seul « Fleurs Roussel » doit être en italique, laquelle de ces deux balises ouvrantes te paraît en trop ?
+
+> celle devant 12 rue colbert
+
+Exactement. Celle devant « 12 rue Colbert » est en trop. La paire qui entoure « Fleurs Roussel » suffit à mettre uniquement le nom en italique.
+
+Après l’avoir retirée, le reste du footer s’affiche-t-il normalement ?
+
+> yes
+
+Ce point est résolu : seul « Fleurs Roussel » reste en italique.
+
+
+**PARTIE F :**
+
+Retranscription échange avec IA : 
+
+# Vérifier le HTML et le CSS
+
+> vérifie l'html et le css. As-tu des suggestions ?
+
+<details><summary>2 previous messages</summary>
+
+> Je vais lire le HTML et le CSS pour repérer les erreurs éventuelles et les améliorations utiles.
+>
+> <details><summary>Explored 2 files, a list, ran 2 commands</summary>
+>
+> - Ran `pwd; rg --files -g 'AGENTS.md' -g '*.html' -g '*.css'`
+>
+> <details><summary>Explored 4 files, a list</summary>
+>
+> - Read `./livraison.html`
+> - Read `./css/style.css`
+> - Listed files
+> - Read `./css/style.css`
+> - Read `./livraison.html`
+>
+> </details>
+>
+> - Ran `python3 -c 'def l(h):
+>  c=[int(h[i:i+2],16)/255 for i in (0,2,4)]; c=[v/12.92 if v<=0.04045 else ((v+0.055)/1.055)**2.4 for v in c]; return sum(a*b for a,b in zip(c,[.2126,.7152,.0722]))
+> for c in ["b4b9b5","727773"]: print(c, round(1.05/(l(c)+.05),2))'`
+>
+> </details>
+</details>
+
+Le HTML et le CSS sont globalement bien structurés. À la lecture, je ne repère pas d’erreur de syntaxe évidente. Je n’ai modifié aucun fichier ; cette vérification ne comprend pas de test visuel dans un navigateur.
+
+Les points à traiter en priorité :
+
+- **Lien d’évitement potentiellement masqué** — Dans `css/style.css:38`, `.evitement` n’a pas de `z-index`, tandis que l’en-tête possède `z-index: 10`. Le lien « Aller au contenu » risque donc d’apparaître derrière l’en-tête au clavier. Prévoir un niveau supérieur et vérifier avec Tab.
+- **Légende du tableau trop claire** — Dans `css/style.css:155`, le gris utilisé donne un contraste calculé d’environ **1,99:1** sur blanc. Assombrir cette légende. Ta couleur de `.note`, elle, atteint environ **4,56:1**.
+- **Formulaire sans vérification réelle** — Dans `livraison.html:100`, `action="#"` renvoie vers la page courante. Les champs sont contrôlés par le navigateur, mais aucun traitement ne détermine si la livraison est possible. C’est à compléter si le formulaire doit fonctionner.
+- **Liens vers des pages absentes** — `index.html`, `bouquets.html` et `contact.html` ne figurent pas dans le dossier actuel. Ces liens seront cassés si tu livres uniquement ce dossier.
+- **Promesse de livraison ambiguë** — Le bandeau annonce une livraison le jour même sans restriction, alors que le tableau indique « Lendemain » pour la zone 3. Préciser les zones concernées dans le bandeau.
+
+Quelques suggestions secondaires :
+
+- Remplacer l’alternative de l’image par « Camionnette de livraison Fleurs Roussel » : formulation plus directe et orthographe corrigée.
+- Si nécessaire, empêcher la sélection d’une date passée : actuellement, le champ l’autorise.
+- Dans `prefers-reduced-motion`, supprimer également le déplacement au survol si tu veux éviter tout mouvement : seule la transition est désactivée aujourd’hui.
+
+Les associations `label`/`input`, la hiérarchie des titres, les en-têtes du tableau avec `scope`, ainsi que les dimensions de l’image sont déjà bien renseignés.
+
+> **Promesse de livraison ambiguë** — Le bandeau annonce une livraison le jour même sans restriction, alors que le tableau indique « Lendemain » pour la zone 3. Préciser les zones concernées dans le bandeau.
+> **Lien d’évitement potentiellement masqué** — Dans `css/style.css:38`, `.evitement` n’a pas de `z-index`, tandis que l’en-tête possède `z-index: 10`. Le lien « Aller au contenu » risque donc d’apparaître derrière l’en-tête au clavier. Prévoir un niveau supérieur et vérifier avec Tab.
+> **Légende du tableau trop claire** — Dans `css/style.css:155`, le gris utilisé donne un contraste calculé d’environ **1,99:1** sur blanc. Assombrir cette légende. Ta couleur de `.note`, elle, atteint environ **4,56:1**.
+> je veux bien amélioré ces 3 points. Génère moi le code et prépare à modifier les fichiers existants. Avant de modifier les fichiers demande moi avant
+
+Voici les trois modifications proposées.
+
+Dans `livraison.html`, remplacer le paragraphe du bandeau par :
+
+```html
+<p class="chapo">Commandez avant 14 h pour une livraison le jour même en zones 1 et 2. En zone 3, votre bouquet arrive le lendemain.</p>
+```
+
+Dans `css/style.css`, ajouter cette propriété à la règle `.evitement` pour placer le lien au-dessus de l’en-tête :
+
+```css
+z-index: 20;
+```
+
+Dans la règle `.tarifs caption`, remplacer `color: var(--gris-texte);` par :
+
+```css
+color: #727773;
+```
+
+Cette couleur donne un contraste d’environ **4,56:1** sur fond blanc.
+
+**M’autorises-tu à appliquer ces trois modifications dans les fichiers existants ?** Aucun fichier n’a encore été modifié, conformément à ta demande.
+
+> c'est ok tu peux modifier
+
+<details><summary>2 previous messages</summary>
+
+> Je vais appliquer les trois modifications approuvées, puis vérifier les changements.
+>
+> <details><summary>Edited 2 files, explored a search, ran a command</summary>
+>
+> <details><summary>Explored a search</summary>
+>
+> - Searched for `chapo|^\.evitement \{|^\.tarifs caption` in `livraison.html`
+>
+> </details>
+>
+> - Wrote `./css/style.css` (+2 -1)
+> - Wrote `./livraison.html` (+1 -1)
+>
+> - Ran `git diff --check; git diff --stat`
+>
+> </details>
+</details>
+
+Les trois modifications sont appliquées :
+
+- Bandeau précisé pour les zones 1, 2 et 3 dans `livraison.html`.
+- Ajout de `z-index: 20` au lien d’évitement.
+- Légende du tableau assombrie avec `#727773`.
+
+Le contrôle `git diff --check` ne signale aucun problème. L’affichage du lien avec Tab reste à vérifier dans le navigateur.
+
+
+
+Je n'ai pas mis à jour mes règles d'utilisation d'IA, pour moi elles étaient bonnes.
