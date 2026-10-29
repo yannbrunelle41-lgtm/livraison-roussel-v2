@@ -125,9 +125,8 @@ h1 {
   margin: 0;
 }
 
-.bandeau__photo {
-  width: 100%;
-  height: 220px;
+.bandeau__photo { /* Suppression de la ligne height: 220px; */
+  width: 100%;  
   border-radius: var(--rayon);
 }
 
