@@ -37,6 +37,7 @@ img {
 
 .evitement {
   position: absolute;
+  z-index: 20;
   left: var(--espace);
   top: 0;
   padding: 0.5rem 1rem;
@@ -155,7 +156,7 @@ h2 {
 .tarifs caption {
   text-align: left;
   font-style: italic;
-  color: var(--gris-texte);
+  color: #727773;
   padding-bottom: 0.5rem;
 }
 
