@@ -224,6 +224,36 @@ h2 {
   margin: 0;
 }
 
+.faq details { /* propriétés appliquées pour les blocs dépliables */
+  margin-bottom: 1rem;
+  border: 1px solid var(--vert);
+  border-radius: var(--rayon);
+  background: var(--fond);
+}
+.faq summary { /* propriétés appliquées pour les questions des blocs pliables*/
+  padding: 1rem;
+  border-radius: var(--rayon);
+  color: var(--vert);
+  font-weight: 700;
+  cursor: pointer;
+}
+.faq summary:hover { /* propriété liée au survol des blocs pliables pour faire une animation visaible par l'utilisateur */
+  background: var(--vert-clair);
+}
+.faq summary:focus-visible { /* contour visible pour la navigation au clavier - respect RGAA*/
+  outline: 3px solid var(--rose);
+  outline-offset: 3px;
+}
+.faq details[open] summary { /* change le fond de la question qui a un bloc pliable ouvert */
+  background: var(--vert-clair);
+}
+.faq details p { /* définition apparence des paragraphes "réponse" */
+  margin: 0;
+  padding: 1rem;
+  color: var(--texte);
+}
+
+
 /* Formulaire */
 
 .formulaire {
