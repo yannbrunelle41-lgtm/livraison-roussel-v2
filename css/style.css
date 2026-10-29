@@ -240,9 +240,9 @@ h2 {
 .faq summary:hover { /* propriété liée au survol des blocs pliables pour faire une animation visaible par l'utilisateur */
   background: var(--vert-clair);
 }
-.faq summary:focus-visible { /* contour visible pour la navigation au clavier - respect RGAA*/
-  outline: 3px solid var(--rose);
-  outline-offset: 3px;
+.faq summary:focus-visible { /* contour visible pour la navigation au clavier */
+  outline: 3px solid var(--rose); /* définit le contour visible autour de la question sans prendre d'espace dans le flux donc elle ne pousse pas les éléments autour */
+  outline-offset: 3px; /*  */
 }
 .faq details[open] summary { /* change le fond de la question qui a un bloc pliable ouvert */
   background: var(--vert-clair);

@@ -1166,6 +1166,261 @@ Liens vers des pages absentes — index.html, bouquets.html et contact.html ne f
 
 --> c'est un exercice donc pas de lien actif, c'est ok.
 
+**Ajout de la FAQ dans la page livraison.html**
+
+Echange avec l'IA : 
+
+# Continuer livraison Roussel v2
+
+> suite de l'exercice livraison roussel v2
+
+On reprend l’exercice **Livraison Roussel v2**, en mode normal.
+
+Sur quel point souhaites-tu continuer : le CSS, le HTML ou le carnet IA ?
+
+> 1. Faire générer la foire aux questions (\<details> et \<summary>, contenu fourni), puis commenter chaque ligne et l’adapter à la charte de la page.
+>
+> [https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/file/pdf/contenu-faq-6adf4c2c3b62b336190870.pdf](https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/file/pdf/contenu-faq-6adf4c2c3b62b336190870.pdf)
+
+<details><summary>4 previous messages</summary>
+
+> Je vais lire le contenu fourni et les fichiers de la page pour intégrer la FAQ avec `&lt;details&gt;` et `<summary>`, commenter chaque ligne ajoutée et reprendre la charte existante. J’utilise la compétence PDF pour consulter le document.
+>
+> <details><summary>Ran 7 commands, searched the web</summary>
+>
+> - Ran `pwd && rg --files -g 'AGENTS.md' -g 'livraison.html' -g 'style.css' -g 'carnet-ia.md'`
+>
+> <details><summary>Explored a file</summary>
+>
+> - Read `~/.codex/plugins/cache/openai-primary-runtime/pdf/26.1025.11240/skills/pdf/SKILL.md`
+>
+> </details>
+>
+> Searched the web for `https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/file/pdf/contenu-faq-6adf4c2c3b62b336190870.pdf`
+>
+> - Ran `cat livraison.html css/style.css carnet-ia.md`
+>
+> - Ran `curl -L 'https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/file/pdf/contenu-faq-6adf4c2c3b62b336190870.pdf' -o /tmp/roussel-faq.pdf`
+>
+> - Ran `curl -L 'https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/file/pdf/contenu-faq-6adf4c2c3b62b336190870.pdf' -o /tmp/roussel-faq.pdf`
+>
+> - Ran `pdftotext -layout /tmp/roussel-faq.pdf -`
+>
+> - Ran `python3 -c 'import pymupdf; d=pymupdf.open("/tmp/roussel-faq.pdf"); print("\n".join(p.get_text() for p in d))'`
+>
+> - Ran `python3 -c 'import pypdf; print("\n".join(p.extract_text() for p in pypdf.PdfReader("/tmp/roussel-faq.pdf").pages))'`
+>
+> </details>
+>
+> Le PDF est téléchargé. Je prépare l’extraction des questions et réponses, puis j’ajouterai une section qui reprend le vert, les espacements et les angles arrondis de la page.
+>
+> <details><summary>Edited 2 files, ran 3 commands</summary>
+>
+> - Ran `python3 -m pip install --target /tmp/roussel-pdf-libs pypdf`
+> - Ran `python3 -c 'import sys; sys.path.insert(0,"/tmp/roussel-pdf-libs"); from pypdf import PdfReader; print("\n".join(p.extract_text() for p in PdfReader("/tmp/roussel-faq.pdf").pages))'`
+> - Wrote `./css/style.css` (+30 -0)
+> - Wrote `./livraison.html` (+24 -0)
+> - Ran `git diff --check`
+>
+> </details>
+</details>
+
+La FAQ est intégrée entre « Comment ça marche » et le formulaire :
+
+- Les cinq questions et réponses du PDF sont reprises à l’identique.
+- Chaque ligne ajoutée en HTML et CSS est commentée.
+- Les couleurs et arrondis reprennent la charte existante.
+- L’ouverture utilise `<details>` et `<summary>`, sans JavaScript, avec un contour de focus prévu au clavier.
+
+`git diff --check` ne signale aucun problème. L’affichage et la navigation avec Tab, Entrée et Espace restent à vérifier dans ton navigateur.
+
+> vérifie ce que tu as fait pour être sûr que cela correspond parfaitement à la demande
+
+<details><summary>2 previous messages</summary>
+
+> Je vais comparer les ajouts aux exigences du PDF et à ta consigne, puis vérifier ce qui peut l’être dans les fichiers. Je distinguerai les contrôles effectués de ceux qui nécessitent un navigateur.
+>
+> <details><summary>Ran 2 commands</summary>
+>
+> - Ran `git diff -- livraison.html css/style.css && git diff --check`
+> - Ran `python3 -c 'import sys; sys.path.insert(0,"/tmp/roussel-pdf-libs"); from pypdf import PdfReader; print("\n".join(p.extract_text() for p in PdfReader("/tmp/roussel-faq.pdf").pages))'`
+>
+> </details>
+</details>
+
+Le code correspond aux exigences techniques du [PDF fourni](https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/file/pdf/contenu-faq-6adf4c2c3b62b336190870.pdf) :
+
+- **Emplacement correct** : entre les étapes et le formulaire.
+- **Titre correct** : « Questions fréquentes », en `<h2>`, relié à la section par `aria-labelledby`.
+- **Structure correcte** : cinq paires `<details>` / `<summary>`, sans JavaScript.
+- **Textes identiques** au document, sans reformulation.
+- **Charte respectée** : uniquement les variables de couleur existantes, avec les arrondis de la page.
+- **Chaque ligne de code ajoutée est commentée.**
+- `git diff --check` ne signale aucun problème.
+
+Deux réserves empêchent de dire « parfaitement vérifié » :
+
+1. **Le PDF demande que tu rédiges toi-même les commentaires**, puis adaptes le code. Je les ai rédigés à ta demande : cette partie du travail pédagogique reste donc à reprendre avec tes mots.
+2. **Je n’ai pas testé dans un navigateur** le rendu à différentes largeurs ni l’ouverture au clavier. Le HTML natif et le style de focus sont présents, mais leur fonctionnement visuel reste à confirmer.
+
+Aucun fichier n’a été modifié pendant cette vérification.
+
+
+
+> enlève uniquement les commentaires que tu as créé
+
+<details><summary>2 previous messages</summary>
+
+> Je vais retirer uniquement les commentaires que j’ai ajoutés à la FAQ dans le HTML et le CSS, en conservant le code et tes autres commentaires.
+>
+> <details><summary>Ran a command</summary>
+>
+> - Ran `python3 - <<'PY'
+> from pathlib import Path
+> import re
+> p = Path('livraison.html')
+> s = p.read_text()
+> a = s.index('    <section class="conteneur section faq"')
+> b = s.index('    <section class="conteneur section" aria-labelledby="titre-verifier">', a)
+> s = s[:a] + re.sub(r' <!--.*?-->', '', s[a:b]) + s[b:]
+> p.write_text(s)
+> p = Path('css/style.css')
+> s = p.read_text()
+> a = s.index('/* FAQ : présentation')
+> b = s.index('/* Formulaire */', a)
+> block = re.sub(r'/\*.*?\*/', '', s[a:b])
+> block = '\n'.join(line.rstrip() for line in block.splitlines()).lstrip('\n')
+> s = s[:a] + block + '\n\n' + s[b:]
+> p.write_text(s)
+> PY
+>  git diff --check`
+>
+> </details>
+</details>
+
+Mes commentaires ont été retirés du HTML et du CSS de la FAQ. Le code et tes commentaires existants sont conservés.
+
+> quelles lignes as-tu modifié dans le css ?
+
+<details><summary>1 previous message</summary>
+
+> <details><summary>Explored a file</summary>
+>
+> - Read `./css/style.css`
+>
+> </details>
+</details>
+
+J’ai ajouté le bloc FAQ aux **lignes 227 à 254** de [css/style.css](css/style.css:227), entre les styles des cartes et ceux du formulaire :
+
+- **227–232** : blocs dépliables.
+- **233–239** : questions.
+- **240–242** : survol.
+- **243–246** : contour visible au clavier.
+- **247–249** : question ouverte.
+- **250–254** : réponses.
+
+Lors de la dernière modification, j’ai seulement retiré mes commentaires de ce bloc.
+
+> tu n'as pas ajouté de propriétés à :root { ?
+
+Non, je n’ai rien ajouté ni modifié dans `:root`.
+
+La FAQ réutilise les variables existantes : `--vert`, `--vert-clair`, `--rose`, `--fond`, `--texte` et `--rayon`.
+
+> **247–249** : question ouverte. explique moi
+
+Cette règle change le fond de la question lorsque sa réponse est ouverte :
+
+```css
+.faq details[open] summary {
+  background: var(--vert-clair);
+}
+```
+
+Le sélecteur se lit ainsi :
+
+- **`.faq`** : dans la section FAQ ;
+- **`details[open]`** : cherche un élément `<details>` qui possède l’attribut `open` ;
+- **`summary`** : cible la question à l’intérieur.
+
+Quand tu ouvres une question, le navigateur ajoute automatiquement l’attribut `open` au `<details>`. Cette règle applique alors le **fond vert clair au texte de la question**.
+
+Quand tu la refermes, le navigateur retire `open` et cette règle cesse de s’appliquer.
+
+> **250–254** : réponses. explique moi
+
+Cette règle définit l’apparence des paragraphes de réponse :
+
+```css
+.faq details p {
+  margin: 0;
+  padding: 1rem;
+  color: var(--texte);
+}
+```
+
+**`.faq details p`** cible les paragraphes `<p>` placés dans les éléments `<details>` de la FAQ.
+
+- **`margin: 0;`** supprime les marges extérieures que le navigateur applique par défaut aux paragraphes.
+- **`padding: 1rem;`** ajoute un espace intérieur sur les quatre côtés pour éloigner le texte des bords.
+- **`color: var(--texte);`** utilise la couleur définie par `--texte` dans `:root`, ici `#1f2421`.
+
+La distinction à retenir : **`margin` espace autour du paragraphe ; `padding` espace à l’intérieur du paragraphe.**
+
+> vérifie mes commentaires. Ne les modifie pas, fais moi un retour écrit
+
+<details><summary>2 previous messages</summary>
+
+> Je vais lire tes commentaires dans le HTML et le CSS, puis te faire un retour sur leur exactitude, sans modifier les fichiers.
+>
+> <details><summary>Ran a command</summary>
+>
+> - Ran `cat livraison.html css/style.css`
+>
+> </details>
+</details>
+
+Tes commentaires sur la FAQ sont **globalement justes**. Je n’ai modifié aucun fichier.
+
+Voici les points à préciser :
+
+- **`<details>`** : ton explication est correcte. L’ouverture fonctionne aussi au clavier, pas seulement « en 1 clic ».
+- **`<summary>`** : il est bien un enfant direct de `<details>`. Il sert de titre, mais aussi de commande pour ouvrir et fermer la réponse. Petite faute : « enfnat » → « enfant ».
+- **`.faq summary:hover`** : ce n’est pas une **animation**, car aucun changement progressif n’est défini. C’est un changement immédiat de couleur au survol de la **question**, plutôt que du bloc entier. « visaible » → « visible ».
+- **`.faq summary:focus-visible`** : « contour visible pour la navigation au clavier » est correct. « respect RGAA » est plus large : cette règle contribue à l’accessibilité, mais ne suffit pas à garantir la conformité.
+- **`details[open] summary`** et **`.faq details p`** : tes explications sont correctes.
+
+Enfin, **tu as commenté les principaux blocs, mais pas chaque ligne**, comme le demande l’exercice. Les propriétés CSS (`padding`, `border`, etc.) et plusieurs lignes HTML restent sans explication.
+
+> outline: 3px solid var(--rose);
+>   outline-offset: 3px;
+
+Ces deux lignes définissent le repère visible autour de la question lorsqu’elle reçoit le focus au clavier :
+
+```css
+outline: 3px solid var(--rose);
+```
+
+- **`3px`** : épaisseur du contour.
+- **`solid`** : trait continu.
+- **`var(--rose)`** : couleur rose définie dans `:root`.
+
+```css
+outline-offset: 3px;
+```
+
+Cette propriété laisse **3 pixels d’espace entre le contour et le bord de l’élément**.
+
+Contrairement à une bordure (`border`), ce contour ne prend pas de place dans la mise en page : il ne déplace pas les éléments voisins.
+
+> c'est outline qui permet de ne pas prendre d'espace ou spéciquement outline-offset ?
+
+C’est **`outline`** qui ne prend pas de place dans la mise en page.
+
+**`outline-offset`** règle seulement la distance entre ce contour et le bord de l’élément. Même avec ce décalage, le contour ne déplace pas les éléments voisins.
+
+
 **MàJ des règles d'utilisation de l'IA :**
 
 Je n'ai pas mis à jour mes règles d'utilisation d'IA, pour moi elles étaient bonnes.
