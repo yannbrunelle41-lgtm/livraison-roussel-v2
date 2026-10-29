@@ -765,3 +765,6 @@ Rédiger cinq règles personnelles d’usage de l’IA :
 4. **Ne pas copier du code sans le comprendre.** Je dois être capable d’expliquer le rôle des balises, propriétés et fonctions utilisées dans mon projet. Ne pas hésiter de commenter le code pour retenir les nouvelles notions.
 
 5. **Protéger les données personnelles et confidentielles.** Je ne dois jamais transmettre à l’IA des mots de passe, des clés API ou des informations sensibles concernant un client.
+
+**PARTIE E :**
+
